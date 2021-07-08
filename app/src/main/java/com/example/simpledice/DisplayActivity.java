@@ -2,12 +2,16 @@ package com.example.simpledice;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,7 +22,8 @@ public class DisplayActivity extends AppCompatActivity {
     int count = 0;
 
     LinearLayout ll;
-    TextView t1, t2;
+    Button back;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +31,6 @@ public class DisplayActivity extends AppCompatActivity {
         setContentView(R.layout.display_rolls);
 
         ll = findViewById(R.id.displayLayout);
-        t1 = findViewById(R.id.textView);
-        t2 = findViewById(R.id.textView2);
 
 
 
@@ -35,19 +38,33 @@ public class DisplayActivity extends AppCompatActivity {
         side = mIntent.getIntExtra("side", 0);
         count = mIntent.getIntExtra("count", 0);
 
-        String s1 = String.valueOf(side);
-        String s2 = String.valueOf(count);
-        
 
-/*        t1.setText(String.valueOf(side));
-        t2.setText(String.valueOf(count));*/
+        Dice d = new Dice(side, count);
+        int rolls[] = d.allRolls();
 
-        //Adding 2 TextViews
-/*        for (int i = 1; i <= 2; i++) {
+
+        for (int i = 0; i < rolls.length; i++) {
             TextView textView = new TextView(this);
-            textView.setText("TextView " + String.valueOf(i));
+            textView.setText("Dice " + (i+1) + ": " + String.valueOf(rolls[i]));
             ll.addView(textView);
-        }*/
+        }
+        TextView textView = new TextView(this);
+        textView.setText("Sum: " + d.sum());
+        ll.addView(textView);
+
+        back = new Button(this);
+        back.setText("Roll Again");
+        ll.addView(back);
+
+
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent displayIntent = new Intent(DisplayActivity.this, RollActivity.class);
+                startActivity(displayIntent);
+            }
+        });
+
 
 
 
